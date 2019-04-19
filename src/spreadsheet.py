@@ -86,13 +86,23 @@ class Spreadsheet:
     
     def fillTotal(self, row):
         total          = self.stockData["total"]
-        totalPercentUp = total["percentUp"]
-        totalDollarsUp = total["dollarsUp"]
+        totalPercentUp = str(total["percentUp"])
+        totalDollarsUp = str(total["dollarsUp"])
+
+        positiveDollars = total["positiveDollars"]
+        positivePercent = total["positivePercent"]
 
         self.ws.write(row, 0, "Total", self.blackDataStyle)
-        self.ws.write(row, 1, totalPercentUp, self.blackDataStyle)
-        self.ws.write(row, 2, totalDollarsUp, self.blackDataStyle)
 
+        if positivePercent:
+            self.ws.write(row, 1, totalPercentUp + "%", self.greenDataStyle)
+        else:
+            self.ws.write(row, 1, totalPercentUp + "%", self.redDataStyle)
+
+        if positiveDollars:
+            self.ws.write(row, 2, "$" + totalDollarsUp, self.greenDataStyle)
+        else:
+            self.ws.write(row, 2, "$" + totalDollarsUp, self.redDataStyle)
 
     def FillSpreadsheet(self):
         print("start")

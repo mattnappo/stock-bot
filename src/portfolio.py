@@ -79,10 +79,20 @@ class Portfolio:
             self.downPercentages
         )
 
+        positiveDollars = False
+        if totalDollarsUp >= 0:
+            positiveDollars = True
+        
+        positivePercent = False
+        if totalPercentUp >= 0:
+            positivePercent = True
+
         response = {
             "total": {
                 "dollarsUp": totalDollarsUp,
-                "percentUp": totalPercentUp
+                "percentUp": totalPercentUp,
+                "positiveDollars": positiveDollars,
+                "positivePercent": positivePercent
             }
         }
         return response
@@ -125,7 +135,7 @@ class Portfolio:
             + ticker.upper() + "&apikey=" + self.APIKey
 
         response = requests.get(request)
-        if "Note" in str(response):
+        if "Note" in str(response.json()):
             print("You've reached your maximum amount of API calls per minute.")
             sys.exit(-1)
         print(response.json())
