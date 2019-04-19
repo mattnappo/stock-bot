@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, json
 from src.portfolio import Portfolio
 from src.spreadsheet import Spreadsheet
 
@@ -16,8 +16,23 @@ class StockBot:
         s = Spreadsheet(self.portfolio)
         s.FillSpreadsheet()
 
-    def buy(self):
-        pass
+    def buy(self, ticker, shares, price):
+        order = {
+            ticker: {
+                "buyPrice": str(price),
+                "shares": shares
+            }
+        }
+        
+        portfolio = ""
+        with open("data/portfolio.json", "r") as f:
+            portfolio = f.read()
+
+        portfolio = json.loads(portfolio)
+        portfolio.update(order)
+
+        with open("data/portfolio.json", "w") as f:
+            json.dump(portfolio, f)
 
     def sell(self):
         pass
@@ -43,12 +58,22 @@ class StockBot:
                 print("What is the ticker?")
                 ticker = input("> ")
 
+                shares = 0
                 print("How many shares to buy?")
                 try:
                     shares = int(input("> "))
-                    self.buy(ticker, shares)
                 except:
                     buffer = "That is not a valid amount of shares."
+                
+                price = 0.0
+                print("Price to buy at?")
+                try:
+                    price = float(input("> "))
+                except:
+                    buffer = "That is not a valid price."
+
+                self.buy(ticker, shares, price)
+                buffer = "Bought " + str(shares) + " shares of " + ticker + " for $" + str(price) + "."
 
             elif command == "3":
                 self.sell()

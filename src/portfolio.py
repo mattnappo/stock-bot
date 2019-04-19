@@ -137,7 +137,8 @@ class Portfolio:
         try:
             jsonStockReport = self.parseResponse(response.json())
         except:
-            print("You've reached your maximum amount of API calls per minute.")
+            # print("You've reached your maximum amount of API calls per minute.")
+            print("StockBot couldn't handle that request. Maybe you typed the ticker incorrectly?")
             sys.exit(-1)
 
         return jsonStockReport

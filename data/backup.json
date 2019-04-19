@@ -1,0 +1,18 @@
+{
+    "brk.b": {
+        "buyPrice": "171.14",
+        "shares": 2
+    },
+    "msft": {
+        "buyPrice": "130",
+        "shares": 20
+    },
+    "spy": {
+        "buyPrice": "300",
+        "shares": 1
+    },
+    "aapl": {
+        "buyPrice": "200",
+        "shares": 2
+    }
+}
