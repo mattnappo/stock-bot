@@ -12,7 +12,21 @@ class SpreadsheetManager:
         self.ws = self.wb.add_sheet("Report")
         
         self.headerStyle = xlwt.easyxf("font: name Times New Roman, color-index black, bold on")
-        self.dataStyle   = xlwt.easyxf("font: name Times New Roman, color-index black")
+        
+        self.blackDataStyle   = xlwt.easyxf(
+            "font: name Times New Roman, color-index black",
+            num_format_str="#,##0.00"
+        )
+
+        self.redDataStyle   = xlwt.easyxf(
+            "font: name Times New Roman, color-index red",
+            num_format_str="#,##0.00"
+        )
+
+        self.greenDataStyle   = xlwt.easyxf(
+            "font: name Times New Roman, color-index green",
+            num_format_str="#,##0.00"
+        )
 
         self.setupHeaders()
 
@@ -36,19 +50,26 @@ class SpreadsheetManager:
         percentChange = stock["percentChange"]
         dollarChange  = stock["dollarChange"]
 
-        self.ws.write(row, 0, ticker, self.dataStyle)
+        self.ws.write(row, 0, ticker, self.blackDataStyle)
 
-        self.ws.write(row, 1, openPrice, self.dataStyle)
-        self.ws.write(row, 0, currentPrice, self.dataStyle)
+        self.ws.write(row, 1, openPrice, self.blackDataStyle)
+        self.ws.write(row, 2, currentPrice, self.blackDataStyle)
 
-        self.ws.write(row, 0, ticker, self.dataStyle)
-        self.ws.write(row, 0, ticker, self.dataStyle)
+        if percentChange[0] == "-":
+            self.ws.write(row, 3, percentChange, self.redDataStyle)
+        elif percentChange[0] == "+":
+            self.ws.write(row, 3, percentChange, self.greenDataStyle)
+
+        if dollarChange[0] == "-":
+            self.ws.write(row, 4, dollarChange, self.redDataStyle)
+        elif dollarChange[0] == "+":
+            self.ws.write(row, 4, dollarChange, self.greenDataStyle)
 
     def FillSpreadsheet(self):
         print("start")
         print(self.stockData)
         print("end")
-        row = 0
+        row = 4
         for stock in self.stockData:
             self.fillRow(stock, row)
             row += 1

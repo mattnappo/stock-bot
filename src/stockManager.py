@@ -50,8 +50,8 @@ class StockManager:
 
         jsonStockReport = {
             symbol: {
-                "openPrice": openPrice,
-                "currentPrice": currentPrice,
+                "openPrice": "$" + str(openPrice),
+                "currentPrice": "$" + str(currentPrice),
                 "dollarChange": dollarChange,
                 "percentChange": percentChange
             }
