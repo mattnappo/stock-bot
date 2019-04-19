@@ -18,7 +18,7 @@ class Portfolio:
         with open("data/api_key", "r") as f:  
             self.APIKey = f.read()
     
-    def calculateChange(self, buyPrice, currentPrice):
+    def calculate(self, buyPrice, currentPrice, ticker):
         dollarChange  = round((currentPrice - buyPrice), 2)
         percentChange = round(((dollarChange / abs(buyPrice)) * 100), 2)
 
@@ -32,9 +32,14 @@ class Portfolio:
         else:
             percentChange = "+" + str(percentChange)
 
+        shares = str(self.portfolio[ticker]["shares"])
+        profit = str(round((float(shares) * float(dollarChange)), 2))
+
         jsonChange = {
             "dollars": dollarChange,
-            "percent": percentChange
+            "percent": percentChange,
+            "shares": shares,
+            "profit": profit
         }
 
         return jsonChange
@@ -48,16 +53,21 @@ class Portfolio:
         currentPrice = round(float(currentPrice), 2)
         buyPrice = self.portfolio[ticker.lower()]["buyPrice"]
 
-        change = self.calculateChange(float(buyPrice), float(currentPrice))
-        dollarChange  = change["dollars"]
-        percentChange = change["percent"]
+        calculations = self.calculate(float(buyPrice), float(currentPrice), ticker.lower())
+        dollarChange  = calculations["dollars"]
+        percentChange = calculations["percent"]
+
+        shares = calculations["shares"]
+        profit = calculations["profit"]
 
         jsonStockReport = {
             ticker: {
-                "openPrice": "$" + str(buyPrice),
+                "buyPrice": "$" + str(buyPrice),
                 "currentPrice": "$" + str(currentPrice),
                 "dollarChange": dollarChange,
-                "percentChange": percentChange
+                "percentChange": percentChange,
+                "shares": shares,
+                "profit": profit
             }
         }
         return jsonStockReport
@@ -72,14 +82,6 @@ class Portfolio:
 
         jsonStockReport = self.parseResponse(response.json())
         print(jsonStockReport)
-        shares = self.portfolio[ticker]["shares"]
-        dollarChange = round((float(jsonStockReport[ticker.upper()]["dollarChange"])), 2)
-        profit = round((float(shares) * dollarChange), 2)
-
-        portfolioData = {
-            "shares": self.portfolio[ticker]["shares"],
-            "profit": profit
-        }
 
         return jsonStockReport
 

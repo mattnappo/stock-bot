@@ -1,10 +1,10 @@
 {
-    "amzn": {
-        "buyPrice": "273.21",
-        "shares": 1
+    "brk.b": {
+        "buyPrice": "171.14",
+        "shares": 2
     },
     "msft": {
-        "buyPrice": "012.82",
+        "buyPrice": "1000000",
         "shares": 1
     },
     "spy": {
@@ -12,7 +12,7 @@
         "shares": 1
     },
     "aapl": {
-        "buyPrice": "2783",
+        "buyPrice": "10",
         "shares": 10
     }
 }

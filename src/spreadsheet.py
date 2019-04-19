@@ -40,8 +40,8 @@ class Spreadsheet:
         self.ws.write(3, 2, "Buy Price", self.headerStyle)
         self.ws.write(3, 3, "Current Price", self.headerStyle)
 
-        self.ws.write(3, 4, "% Change", self.headerStyle)
-        self.ws.write(3, 5, "$ Change", self.headerStyle)
+        self.ws.write(3, 4, "$ Change", self.headerStyle)
+        self.ws.write(3, 5, "% Change", self.headerStyle)
         
         self.ws.write(3, 6, "Profit", self.headerStyle)
 
@@ -62,19 +62,24 @@ class Spreadsheet:
         self.ws.write(row, 2, buyPrice, self.blackDataStyle)
         self.ws.write(row, 3, currentPrice, self.blackDataStyle)
 
-        if percentChange[0] == "-":
-            self.ws.write(row, 4, percentChange, self.redDataStyle)
-        else:
-            self.ws.write(row, 4, percentChange, self.greenDataStyle)
 
         if dollarChange[0] == "-":
-            self.ws.write(row, 5, dollarChange, self.redDataStyle)
+            dollarChange = "-$" + dollarChange[1:]
+            self.ws.write(row, 4, dollarChange, self.redDataStyle)
         else:
-            self.ws.write(row, 5, dollarChange, self.greenDataStyle)
+            dollarChange = "+$" + dollarChange[1:]
+            self.ws.write(row, 4, dollarChange, self.greenDataStyle)
+
+        if percentChange[0] == "-":
+            self.ws.write(row, 5, percentChange + "%", self.redDataStyle)
+        else:
+            self.ws.write(row, 5, percentChange + "%", self.greenDataStyle)
 
         if profit[0] == "-":
+            profit = "-$" + profit[1:]
             self.ws.write(row, 6, profit, self.redDataStyle)
         else:
+            profit = "+$" + profit[1:]
             self.ws.write(row, 6, profit, self.greenDataStyle)
 
     def FillSpreadsheet(self):
