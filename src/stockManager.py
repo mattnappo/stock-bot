@@ -3,7 +3,7 @@ import requests
 
 class StockManager:
     def __init__(self):
-        self.prices = {}
+        self.stockData = {}
 
         self.tickers = {}
         self.loadTickers()
@@ -18,6 +18,17 @@ class StockManager:
     def loadAPIKey(self):
         with open("data/api_key", "r") as f:  
             self.APIKey = f.read()
+    
+    def calculateChange(self, openPrice, currentPrice):
+        dollarChange = currentPrice - openPrice
+        percentChange = (dollarChange / abs(openPrice)) * 100
+
+        jsonChange = {
+            "dollars": dollarChange,
+            "percent": percentChange
+        }
+
+        return jsonChange
 
     def parseResponse(self, response):
         quote = response["Global Quote"]
@@ -26,10 +37,15 @@ class StockManager:
         openPrice    = quote["02. open"]
         currentPrice = quote["05. price"]
 
+        change = self.calculateChange(openPrice, currentPrice)
+        dollarChange  = change["dollars"]
+        percentChange = change["percent"]
+
         jsonStockReport = {
-            "symbol": symbol,
-            "openPrice": openPrice,
-            "currentPrice": currentPrice
+            symbol: {
+                "openPrice": openPrice,
+                "currentPrice": currentPrice
+            }
         }
         return jsonStockReport
 
@@ -45,9 +61,9 @@ class StockManager:
         print(response.json())
 
         jsonStockReport = self.parseResponse(response.json())
-        
-        
+        return jsonStockReport
 
     def GetPrices(self):
         for ticker in self.tickers:
-            self.prices[ticker] = self.getPrice(ticker)
+            jsonStockReport = self.getPrice(ticker)
+            self.stockData.update(jsonStockReport)
