@@ -1,4 +1,4 @@
-import json, requests
+import json, requests, sys
 
 class Portfolio:
     def __init__(self):
@@ -123,9 +123,11 @@ class Portfolio:
     def getStockData(self, ticker):
         request = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" \
             + ticker.upper() + "&apikey=" + self.APIKey
-        # print(request)
 
         response = requests.get(request)
+        if "Note" in str(response):
+            print("You've reached your maximum amount of API calls per minute.")
+            sys.exit(-1)
         print(response.json())
 
         jsonStockReport = self.parseResponse(response.json())

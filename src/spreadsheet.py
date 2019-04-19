@@ -47,7 +47,11 @@ class Spreadsheet:
 
     def fillRow(self, ticker, row):
         stock = self.stockData[ticker]
-        
+        print()
+        print()
+        print(stock)
+        print()
+        print()
         buyPrice     = stock["buyPrice"]
         currentPrice = stock["currentPrice"]
         shares       = stock["shares"]
@@ -81,13 +85,13 @@ class Spreadsheet:
             self.ws.write(row, 6, "$" + profit, self.greenDataStyle)
     
     def fillTotal(self, row):
-
-        # totalPercentUp = 
-        # totalProfit = 
+        total          = self.stockData["total"]
+        totalPercentUp = total["percentUp"]
+        totalDollarsUp = total["dollarsUp"]
 
         self.ws.write(row, 0, "Total", self.blackDataStyle)
         self.ws.write(row, 1, totalPercentUp, self.blackDataStyle)
-        self.ws.write(row, 2, totalProfit, self.blackDataStyle)
+        self.ws.write(row, 2, totalDollarsUp, self.blackDataStyle)
 
 
     def FillSpreadsheet(self):
@@ -96,9 +100,10 @@ class Spreadsheet:
         print("end")
         row = 4
         for stock in self.stockData:
-            self.fillRow(stock, row)
-            row += 1
-        
-        # self.fillTotal(row + 2)
+            print("stock: " + stock)
+            if stock != "total":
+                self.fillRow(stock, row)
+                row += 1
+        self.fillTotal(row + 2)
 
         self.wb.save(self.spreadsheetName)
