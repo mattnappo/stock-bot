@@ -12,7 +12,7 @@
         "shares": 1
     },
     "aapl": {
-        "buyPrice": "10",
-        "shares": 10
+        "buyPrice": "200",
+        "shares": 2
     }
 }

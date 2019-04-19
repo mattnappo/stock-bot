@@ -10,8 +10,11 @@ class Portfolio:
         self.APIKey = ""
         self.loadAPIKey()
 
-        self.ups   = [ ]
-        self.downs = [ ]
+        self.upDollars   = [ ]
+        self.downDollars = [ ]
+        
+        self.upPercentages   = [ ]
+        self.downPercentages = [ ]
     
     def loadPortfolio(self):
         with open("data/portfolio.json", "r") as f:
@@ -40,6 +43,11 @@ class Portfolio:
         print("shares: ", shares)
         print("profit: ", profit)
 
+        if float(percentChange) >= 0:
+            self.upPercentages.append(float(percentChange))
+        else:
+            self.downPercentages.append(float(percentChange))
+
         jsonChange = {
             "dollars": dollarChange,
             "percent": percentChange,
@@ -49,20 +57,35 @@ class Portfolio:
 
         return jsonChange
 
-    def calculateNet(self):
-        print(self.ups)
-        print(self.downs)
-
+    def calculateTotal(self, ups, downs):
         totalUp = 0
-        for up in self.ups:
+        for up in ups:
             totalUp += up
 
         totalDown = 0
-        for down in self.downs:
+        for down in downs:
             totalDown += down
 
-        print(totalUp)
-        print(totalDown)
+        return round((totalUp + totalDown), 2)
+
+    def calculateNet(self):
+        totalDollarsUp = self.calculateTotal(
+            self.upDollars,
+            self.downDollars
+        )
+        
+        totalPercentUp = self.calculateTotal(
+            self.upPercentages,
+            self.downPercentages
+        )
+
+        response = {
+            "total": {
+                "dollarsUp": totalDollarsUp,
+                "percentUp": totalPercentUp
+            }
+        }
+        return response
 
     def parseResponse(self, response):
         quote = response["Global Quote"]
@@ -81,9 +104,9 @@ class Portfolio:
         profit = calculations["profit"]
 
         if float(profit) >= 0:
-            self.ups.append(float(profit))
+            self.upDollars.append(float(profit))
         else:
-            self.downs.append(float(profit))
+            self.downDollars.append(float(profit))
 
         jsonStockReport = {
             ticker: {
@@ -114,6 +137,6 @@ class Portfolio:
         for ticker in self.portfolio:
             jsonStockReport = self.getStockData(ticker)
             self.stockData.update(jsonStockReport)
-        self.calculateNet()
+        self.stockData.update(self.calculateNet())
 
         return self.stockData
