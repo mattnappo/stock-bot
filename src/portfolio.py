@@ -40,8 +40,6 @@ class Portfolio:
 
         shares = str(self.portfolio[ticker]["shares"])
         profit = str(round((float(shares) * float(dollarChange)), 2))
-        print("shares: ", shares)
-        print("profit: ", profit)
 
         if float(percentChange) >= 0:
             self.upPercentages.append(float(percentChange))
@@ -135,13 +133,12 @@ class Portfolio:
             + ticker.upper() + "&apikey=" + self.APIKey
 
         response = requests.get(request)
-        if "Note" in str(response.json()):
+
+        try:
+            jsonStockReport = self.parseResponse(response.json())
+        except:
             print("You've reached your maximum amount of API calls per minute.")
             sys.exit(-1)
-        print(response.json())
-
-        jsonStockReport = self.parseResponse(response.json())
-        print(jsonStockReport)
 
         return jsonStockReport
 

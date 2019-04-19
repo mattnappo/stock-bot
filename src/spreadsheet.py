@@ -49,11 +49,7 @@ class Spreadsheet:
 
     def fillRow(self, ticker, row):
         stock = self.stockData[ticker]
-        print()
-        print()
-        print(stock)
-        print()
-        print()
+
         buyPrice     = stock["buyPrice"]
         currentPrice = stock["currentPrice"]
         shares       = stock["shares"]
@@ -107,15 +103,10 @@ class Spreadsheet:
             self.ws.write(row, 2, "$" + totalDollarsUp, self.redDataStyle)
 
     def FillSpreadsheet(self):
-        print("start")
-        print(self.stockData)
-        print("end")
         row = 4
         for stock in self.stockData:
-            print("stock: " + stock)
             if stock != "total":
                 self.fillRow(stock, row)
                 row += 1
         self.fillTotal(row + 2)
-
         self.wb.save(self.spreadsheetName)
