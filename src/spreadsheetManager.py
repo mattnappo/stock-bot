@@ -57,12 +57,12 @@ class SpreadsheetManager:
 
         if percentChange[0] == "-":
             self.ws.write(row, 3, percentChange, self.redDataStyle)
-        elif percentChange[0] == "+":
+        else:
             self.ws.write(row, 3, percentChange, self.greenDataStyle)
 
         if dollarChange[0] == "-":
             self.ws.write(row, 4, dollarChange, self.redDataStyle)
-        elif dollarChange[0] == "+":
+        else:
             self.ws.write(row, 4, dollarChange, self.greenDataStyle)
 
     def FillSpreadsheet(self):
