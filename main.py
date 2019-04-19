@@ -1,19 +1,63 @@
-import json
+import os, sys
 from src.portfolio import Portfolio
 from src.spreadsheet import Spreadsheet
 
-# Get the stock prices
-p = Portfolio()
-portfolio = p.GetPortfolio()
+class StockBot:
+    def __init__(self):
+        self.portfolio = { }
+        self.main()
 
-# stockData = {'AMZN': {'openPrice': 1868.79, 'currentPrice': 1861.69, 'dollarChange': '+$7.1', 'percentChange': '-0.38%'}, 'SPY': {'openPrice': 290.1, 'currentPrice': 289.99, 'dollarChange': '-$0.11', 'percentChange': '-0.04%'}}
+    def getPortfolio(self):
+        p = Portfolio()
+        self.portfolio = p.GetPortfolio()
 
-print()
-print()
-print()
+    def generateSpreadsheet(self):
+        self.getPortfolio()
+        s = Spreadsheet(self.portfolio)
+        s.FillSpreadsheet()
 
-print(portfolio)
+    def buy(self):
+        pass
 
-# Generate the spreadsheet
-s = Spreadsheet(portfolio)
-s.FillSpreadsheet()
+    def sell(self):
+        pass
+
+    def main(self):
+        buffer = "Welcome to StockBot v1.0!\nOptions:"
+        while True:
+            os.system("clear")
+            print(buffer)
+            buffer = ""
+
+            print("[1] Generate a report")
+            print("[2] Buy")
+            print("[3] Sell")
+            print("[E] Exit")
+
+            command = input("> ").lower()
+            if command == "1":
+                self.generateSpreadsheet()
+                buffer = "Spreadsheet has been generated."
+
+            elif command == "2":
+                print("What is the ticker?")
+                ticker = input("> ")
+
+                print("How many shares to buy?")
+                try:
+                    shares = int(input("> "))
+                    self.buy(ticker, shares)
+                except:
+                    buffer = "That is not a valid amount of shares."
+
+            elif command == "3":
+                self.sell()
+
+            elif command == "e":
+                print("Thanks for using StockBot!")
+                sys.exit(-1)
+            
+            else:
+                buffer = "Unknown command."
+
+sb = StockBot()

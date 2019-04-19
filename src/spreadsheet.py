@@ -3,8 +3,10 @@ import xlwt
 
 class Spreadsheet:
     def __init__(self, stockData):
-        self.timestamp = datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")
-        self.spreadsheetName = "report.xlsx"
+        self.timestamp = datetime.datetime.now().strftime("%A, %d.x %B %Y %I:%M%p")
+
+        fileDate = datetime.datetime.now().strftime("%m_%d_%Y")
+        self.spreadsheetName = "reports/" + fileDate + ".xlsx"
 
         self.stockData = stockData
 
