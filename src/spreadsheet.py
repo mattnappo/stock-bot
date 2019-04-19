@@ -62,7 +62,6 @@ class Spreadsheet:
         self.ws.write(row, 2, buyPrice, self.blackDataStyle)
         self.ws.write(row, 3, currentPrice, self.blackDataStyle)
 
-
         if dollarChange[0] == "-":
             dollarChange = "-$" + dollarChange[1:]
             self.ws.write(row, 4, dollarChange, self.redDataStyle)
@@ -79,8 +78,15 @@ class Spreadsheet:
             profit = "-$" + profit[1:]
             self.ws.write(row, 6, profit, self.redDataStyle)
         else:
-            profit = "+$" + profit[1:]
-            self.ws.write(row, 6, profit, self.greenDataStyle)
+            print()
+            print()
+            print()
+            print(profit)
+            print()
+            print()
+            print()
+            # profit = "+$" + profit[1:]
+            self.ws.write(row, 6, "$" + profit, self.greenDataStyle)
 
     def FillSpreadsheet(self):
         print("start")

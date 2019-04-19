@@ -34,6 +34,8 @@ class Portfolio:
 
         shares = str(self.portfolio[ticker]["shares"])
         profit = str(round((float(shares) * float(dollarChange)), 2))
+        print("shares: ", shares)
+        print("profit: ", profit)
 
         jsonChange = {
             "dollars": dollarChange,
