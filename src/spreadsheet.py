@@ -1,11 +1,15 @@
-import json, datetime
-import xlwt
+import json, datetime, os, xlwt
 
 class Spreadsheet:
     def __init__(self, stockData):
         self.timestamp = datetime.datetime.now().strftime("%A, %d.x %B %Y %I:%M%p")
 
-        fileDate = datetime.datetime.now().strftime("%m_%d_%Y")
+        fileDate = datetime.datetime.now().strftime("%m_%d_%Y_at_%I_%M%p")
+        
+        try:
+            os.mkdir("reports/")
+        except:
+            pass
         self.spreadsheetName = "reports/" + fileDate + ".xlsx"
 
         self.stockData = stockData

@@ -54,7 +54,7 @@ class StockBot:
                 self.sell()
 
             elif command == "e":
-                print("Thanks for using StockBot!")
+                print("Thank you for using StockBot!")
                 sys.exit(-1)
             
             else:
