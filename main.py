@@ -5,16 +5,19 @@ from src.spreadsheet import Spreadsheet
 class StockBot:
     def __init__(self):
         self.portfolio = { }
+        self.p = Portfolio()
+        self.s = Spreadsheet(self.portfolio)
+
         self.main()
 
     def getPortfolio(self):
-        p = Portfolio()
-        self.portfolio = p.GetPortfolio()
+        self.p = Portfolio()
+        self.portfolio = self.p.GetPortfolio()
 
     def generateSpreadsheet(self):
         self.getPortfolio()
-        s = Spreadsheet(self.portfolio)
-        s.FillSpreadsheet()
+        self.s = Spreadsheet(self.portfolio)
+        self.s.FillSpreadsheet()
 
     def buy(self, ticker, shares, price):
         portfolio = ""
@@ -60,7 +63,13 @@ class StockBot:
         with open("data/portfolio.json", "w") as f:
             json.dump(portfolio, f)
 
-        return "Sold " + str(shares) + " of " + ticker + " for " + str(price) + "."
+        buyPrice  = float(portfolio[ticker]["buyPrice"])
+        sellPrice = round((float(self.p.getStockData(ticker)[ticker.upper()]["currentPrice"][1:])), 2)
+        profit    = round(((sellPrice - buyPrice) * shares), 2)
+
+        message = "Sold " + str(shares) + " shares of " + ticker + " for $" + str(sellPrice) + ".\n"
+        message += "You made $" + str(profit) + "."
+        return message
     def main(self):
         buffer = "Welcome to StockBot v1.0!\nOptions:"
         while True:
@@ -86,17 +95,17 @@ class StockBot:
                 print("How many shares to buy?")
                 try:
                     shares = int(input("> "))
-                except:
+                except Exception:
                     buffer = "That is not a valid amount of shares."
                 
                 price = 0.0
                 print("Price to buy at?")
                 try:
                     price = float(input("> "))
-                except:
+                    self.buy(ticker, shares, price)
+                except Exception:
                     buffer = "That is not a valid price."
 
-                self.buy(ticker, shares, price)
                 buffer = "Bought " + str(shares) + " shares of " + ticker + " for $" + str(price) + "."
 
             elif command == "3":
@@ -107,8 +116,9 @@ class StockBot:
                 print("How many shares to sell?")
                 try:
                     shares = int(input("> "))
-                except:
+                except ValueError:
                     buffer = "That is not a valid amount of shares."
+                    continue
                 buffer = self.sell(ticker, shares)
 
             elif command == "e":
