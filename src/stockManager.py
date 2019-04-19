@@ -1,5 +1,4 @@
-import json
-import requests
+import json, requests
 
 class StockManager:
     def __init__(self):
@@ -20,12 +19,12 @@ class StockManager:
             self.APIKey = f.read()
     
     def calculateChange(self, openPrice, currentPrice):
-        dollarChange = currentPrice - openPrice
-        percentChange = (dollarChange / abs(openPrice)) * 100
+        dollarChange = round((currentPrice - openPrice), 2)
+        percentChange = round(((dollarChange / abs(openPrice)) * 100), 2)
 
         jsonChange = {
-            "dollars": dollarChange,
-            "percent": percentChange
+            "dollars": "$" + str(dollarChange),
+            "percent": str(percentChange) + " %"
         }
 
         return jsonChange
@@ -37,22 +36,21 @@ class StockManager:
         openPrice    = quote["02. open"]
         currentPrice = quote["05. price"]
 
-        change = self.calculateChange(openPrice, currentPrice)
+        change = self.calculateChange(float(openPrice), float(currentPrice))
         dollarChange  = change["dollars"]
         percentChange = change["percent"]
 
         jsonStockReport = {
             symbol: {
                 "openPrice": openPrice,
-                "currentPrice": currentPrice
+                "currentPrice": currentPrice,
+                "dollarChange": dollarChange,
+                "percentChange": percentChange
             }
         }
         return jsonStockReport
 
     def getPrice(self, ticker):
-        # request = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" \
-        #     + ticker.upper() + "&apikey=" + self.APIKey
-
         request = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" \
             + ticker.upper() + "&apikey=" + self.APIKey
         print(request)
