@@ -17,6 +17,11 @@ class StockBot:
         s.FillSpreadsheet()
 
     def buy(self, ticker, shares, price):
+        portfolio = ""
+        with open("data/portfolio.json", "r") as f:
+            portfolio = f.read()
+        portfolio = json.loads(portfolio)
+
         order = {
             ticker: {
                 "buyPrice": str(price),
@@ -24,19 +29,38 @@ class StockBot:
             }
         }
         
-        portfolio = ""
-        with open("data/portfolio.json", "r") as f:
-            portfolio = f.read()
-
-        portfolio = json.loads(portfolio)
         portfolio.update(order)
 
         with open("data/portfolio.json", "w") as f:
             json.dump(portfolio, f)
 
-    def sell(self):
-        pass
+    def sell(self, ticker, shares):
+        portfolio = ""
+        with open("data/portfolio.json", "r") as f:
+            portfolio = f.read()
+        portfolio = json.loads(portfolio)
 
+        if not (ticker in portfolio):
+            return "You don't own any " + ticker + "."
+        
+        currentShares = int(portfolio[ticker]["shares"])
+
+        if currentShares < shares:
+            return "You don't own enough shares to sell " + str(shares) + "."
+
+        order = {
+            ticker: {
+                "buyPrice": portfolio[ticker]["buyPrice"],
+                "shares": currentShares - int(shares)
+            }
+        }
+        
+        portfolio.update(order)
+
+        with open("data/portfolio.json", "w") as f:
+            json.dump(portfolio, f)
+
+        return "Sold " + str(shares) + " of " + ticker + " for " + str(price) + "."
     def main(self):
         buffer = "Welcome to StockBot v1.0!\nOptions:"
         while True:
@@ -76,7 +100,16 @@ class StockBot:
                 buffer = "Bought " + str(shares) + " shares of " + ticker + " for $" + str(price) + "."
 
             elif command == "3":
-                self.sell()
+                print("What is the ticker?")
+                ticker = input("> ")
+
+                shares = 0
+                print("How many shares to sell?")
+                try:
+                    shares = int(input("> "))
+                except:
+                    buffer = "That is not a valid amount of shares."
+                buffer = self.sell(ticker, shares)
 
             elif command == "e":
                 print("Thank you for using StockBot!")
