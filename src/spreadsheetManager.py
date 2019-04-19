@@ -7,33 +7,50 @@ class SpreadsheetManager:
         self.spreadsheetName = "report.xlsx"
 
         self.stockData = stockData
+
+        self.wb = xlwt.Workbook()
+        self.ws = self.wb.add_sheet("Report")
+        
+        self.headerStyle = xlwt.easyxf("font: name Times New Roman, color-index black, bold on")
+        self.dataStyle   = xlwt.easyxf("font: name Times New Roman, color-index black")
+
         self.setupHeaders()
 
     def setupHeaders(self):
-        # spreadsheet = excel.Workbook(self.spreadsheetName)
-        # worksheet = spreadsheet.add_worksheet()
+        self.ws.write(0, 0, "Matt's Daily Stock Reports", self.headerStyle)
+        self.ws.write(1, 0, self.timestamp, self.headerStyle)
 
-        # worksheet.write("B2", "Matt's Daily Stock Report")
-        # worksheet.write("C2", self.timestamp)
+        self.ws.write(3, 0, "Ticker", self.headerStyle)
+        self.ws.write(3, 1, "Open Price", self.headerStyle)
+        self.ws.write(3, 2, "Current Price", self.headerStyle)
 
-        # worksheet.write("E2", "Open Price")
-        # worksheet.write("E3", "Current Price")
+        self.ws.write(3, 3, "% Change", self.headerStyle)
+        self.ws.write(3, 4, "$ Change", self.headerStyle)
 
-        # worksheet.write("E4", "Dollar Change")
-        # worksheet.write("E5", "Percent Change")
+    def fillRow(self, ticker, row):
+        stock = self.stockData[ticker]
+        
+        openPrice    = stock["openPrice"]
+        currentPrice = stock["currentPrice"]
 
-        # spreadsheet.Close()
+        percentChange = stock["percentChange"]
+        dollarChange  = stock["dollarChange"]
 
+        self.ws.write(row, 0, ticker, self.dataStyle)
 
-        headerStyle = xlwt.easyxf("font: name Times New Roman, color-index black, bold on")
-        style1 = xlwt.easyxf(num_format_str='D-MMM-YY')
+        self.ws.write(row, 1, openPrice, self.dataStyle)
+        self.ws.write(row, 0, currentPrice, self.dataStyle)
 
-        wb = xlwt.Workbook()
-        ws = wb.add_sheet("Report")
+        self.ws.write(row, 0, ticker, self.dataStyle)
+        self.ws.write(row, 0, ticker, self.dataStyle)
 
-        ws.write(0, 0, 1234.56, headerStyle)
-        ws.write(1, 0, "ok", style1)
-        ws.write(2, 0, 1)
-        ws.write(2, 1, 1)
-        ws.write(2, 2, xlwt.Formula("A3+B3"))
-        wb.save('example.xls')
+    def FillSpreadsheet(self):
+        print("start")
+        print(self.stockData)
+        print("end")
+        row = 0
+        for stock in self.stockData:
+            self.fillRow(stock, row)
+            row += 1
+
+        self.wb.save(self.spreadsheetName)
