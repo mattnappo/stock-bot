@@ -1,6 +1,18 @@
-[
-    "amzn",
-    "msft",
-    "spy",
-    "aapl"
-]
+{
+    "amzn": {
+        "buyPrice": "273.21",
+        "shares": 1
+    },
+    "msft": {
+        "buyPrice": "012.82",
+        "shares": 1
+    },
+    "spy": {
+        "buyPrice": "81",
+        "shares": 1
+    },
+    "aapl": {
+        "buyPrice": "2783",
+        "shares": 10
+    }
+}

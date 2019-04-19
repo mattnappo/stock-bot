@@ -1,7 +1,7 @@
 import json, datetime
 import xlwt
 
-class SpreadsheetManager:
+class Spreadsheet:
     def __init__(self, stockData):
         self.timestamp = datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")
         self.spreadsheetName = "report.xlsx"
@@ -35,35 +35,47 @@ class SpreadsheetManager:
         self.ws.write(1, 0, self.timestamp, self.headerStyle)
 
         self.ws.write(3, 0, "Ticker", self.headerStyle)
-        self.ws.write(3, 1, "Open Price", self.headerStyle)
-        self.ws.write(3, 2, "Current Price", self.headerStyle)
+        self.ws.write(3, 1, "# of Shares", self.headerStyle)
 
-        self.ws.write(3, 3, "% Change", self.headerStyle)
-        self.ws.write(3, 4, "$ Change", self.headerStyle)
+        self.ws.write(3, 2, "Buy Price", self.headerStyle)
+        self.ws.write(3, 3, "Current Price", self.headerStyle)
+
+        self.ws.write(3, 4, "% Change", self.headerStyle)
+        self.ws.write(3, 5, "$ Change", self.headerStyle)
+        
+        self.ws.write(3, 6, "Profit", self.headerStyle)
 
     def fillRow(self, ticker, row):
         stock = self.stockData[ticker]
         
-        openPrice    = stock["openPrice"]
+        buyPrice     = stock["buyPrice"]
         currentPrice = stock["currentPrice"]
+        shares       = stock["shares"]
+        profit       = stock["profit"]
 
         percentChange = stock["percentChange"]
         dollarChange  = stock["dollarChange"]
 
         self.ws.write(row, 0, ticker, self.blackDataStyle)
+        self.ws.write(row, 1, shares, self.blackDataStyle)
 
-        self.ws.write(row, 1, openPrice, self.blackDataStyle)
-        self.ws.write(row, 2, currentPrice, self.blackDataStyle)
+        self.ws.write(row, 2, buyPrice, self.blackDataStyle)
+        self.ws.write(row, 3, currentPrice, self.blackDataStyle)
 
         if percentChange[0] == "-":
-            self.ws.write(row, 3, percentChange, self.redDataStyle)
+            self.ws.write(row, 4, percentChange, self.redDataStyle)
         else:
-            self.ws.write(row, 3, percentChange, self.greenDataStyle)
+            self.ws.write(row, 4, percentChange, self.greenDataStyle)
 
         if dollarChange[0] == "-":
-            self.ws.write(row, 4, dollarChange, self.redDataStyle)
+            self.ws.write(row, 5, dollarChange, self.redDataStyle)
         else:
-            self.ws.write(row, 4, dollarChange, self.greenDataStyle)
+            self.ws.write(row, 5, dollarChange, self.greenDataStyle)
+
+        if profit[0] == "-":
+            self.ws.write(row, 6, profit, self.redDataStyle)
+        else:
+            self.ws.write(row, 6, profit, self.greenDataStyle)
 
     def FillSpreadsheet(self):
         print("start")
