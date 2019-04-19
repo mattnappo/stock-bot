@@ -63,30 +63,32 @@ class Spreadsheet:
         self.ws.write(row, 3, currentPrice, self.blackDataStyle)
 
         if dollarChange[0] == "-":
-            dollarChange = "-$" + dollarChange[1:]
+            dollarChange = "$" + dollarChange[1:]
             self.ws.write(row, 4, dollarChange, self.redDataStyle)
         else:
-            dollarChange = "+$" + dollarChange[1:]
+            dollarChange = "$" + dollarChange[1:]
             self.ws.write(row, 4, dollarChange, self.greenDataStyle)
 
         if percentChange[0] == "-":
-            self.ws.write(row, 5, percentChange + "%", self.redDataStyle)
+            self.ws.write(row, 5, percentChange[1:] + "%", self.redDataStyle)
         else:
-            self.ws.write(row, 5, percentChange + "%", self.greenDataStyle)
+            self.ws.write(row, 5, percentChange[1:] + "%", self.greenDataStyle)
 
         if profit[0] == "-":
-            profit = "-$" + profit[1:]
+            profit = "$" + profit[1:]
             self.ws.write(row, 6, profit, self.redDataStyle)
         else:
-            print()
-            print()
-            print()
-            print(profit)
-            print()
-            print()
-            print()
-            # profit = "+$" + profit[1:]
             self.ws.write(row, 6, "$" + profit, self.greenDataStyle)
+    
+    def fillTotal(self, row):
+
+        # totalPercentUp = 
+        # totalProfit = 
+
+        self.ws.write(row, 0, "Total", self.blackDataStyle)
+        self.ws.write(row, 1, totalPercentUp, self.blackDataStyle)
+        self.ws.write(row, 2, totalProfit, self.blackDataStyle)
+
 
     def FillSpreadsheet(self):
         print("start")
@@ -96,5 +98,7 @@ class Spreadsheet:
         for stock in self.stockData:
             self.fillRow(stock, row)
             row += 1
+        
+        # self.fillTotal(row + 2)
 
         self.wb.save(self.spreadsheetName)

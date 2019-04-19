@@ -9,6 +9,9 @@ class Portfolio:
 
         self.APIKey = ""
         self.loadAPIKey()
+
+        self.ups   = [ ]
+        self.downs = [ ]
     
     def loadPortfolio(self):
         with open("data/portfolio.json", "r") as f:
@@ -46,6 +49,21 @@ class Portfolio:
 
         return jsonChange
 
+    def calculateNet(self):
+        print(self.ups)
+        print(self.downs)
+
+        totalUp = 0
+        for up in self.ups:
+            totalUp += up
+
+        totalDown = 0
+        for down in self.downs:
+            totalDown += down
+
+        print(totalUp)
+        print(totalDown)
+
     def parseResponse(self, response):
         quote = response["Global Quote"]
 
@@ -61,6 +79,11 @@ class Portfolio:
 
         shares = calculations["shares"]
         profit = calculations["profit"]
+
+        if float(profit) >= 0:
+            self.ups.append(float(profit))
+        else:
+            self.downs.append(float(profit))
 
         jsonStockReport = {
             ticker: {
@@ -91,4 +114,6 @@ class Portfolio:
         for ticker in self.portfolio:
             jsonStockReport = self.getStockData(ticker)
             self.stockData.update(jsonStockReport)
+        self.calculateNet()
+
         return self.stockData
