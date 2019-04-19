@@ -11,7 +11,7 @@ class StockManager:
         self.loadAPIKey()
     
     def loadTickers(self):
-        with open("data/stocks.json", "r") as f:
+        with open("data/tickers.json", "r") as f:
             self.tickers = json.load(f)
 
     def loadAPIKey(self):
