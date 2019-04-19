@@ -19,12 +19,17 @@ class StockManager:
             self.APIKey = f.read()
     
     def calculateChange(self, openPrice, currentPrice):
-        dollarChange = round((currentPrice - openPrice), 2)
+        dollarChange  = round((currentPrice - openPrice), 2)
         percentChange = round(((dollarChange / abs(openPrice)) * 100), 2)
 
+        if str(dollarChange)[0] == "-":
+            dollarChange = "-$" + str(dollarChange)[1:]
+        else:
+            dollarChange = "+$" + str(dollarChange)
+
         jsonChange = {
-            "dollars": "$" + str(dollarChange),
-            "percent": str(percentChange) + " %"
+            "dollars": dollarChange,
+            "percent": str(percentChange) + "%"
         }
 
         return jsonChange
@@ -35,6 +40,9 @@ class StockManager:
         symbol       = quote["01. symbol"]
         openPrice    = quote["02. open"]
         currentPrice = quote["05. price"]
+
+        openPrice    = round(float(openPrice), 2)
+        currentPrice = round(float(currentPrice), 2)
 
         change = self.calculateChange(float(openPrice), float(currentPrice))
         dollarChange  = change["dollars"]
