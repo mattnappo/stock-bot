@@ -32,10 +32,13 @@ class StockBot:
             }
         }
         
-        portfolio.update(order)
+        portfolioCopy = portfolio
+        portfolioCopy.update(order)
 
         with open("data/portfolio.json", "w") as f:
-            json.dump(portfolio, f)
+            json.dump(portfolioCopy, f, sort_keys=True, indent=4)
+
+        return "Bought " + str(shares) + " shares of " + ticker + " for $" + str(price) + "."
 
     def sell(self, ticker, shares):
         portfolio = ""
@@ -51,17 +54,21 @@ class StockBot:
         if currentShares < shares:
             return "You don't own enough shares to sell " + str(shares) + "."
 
-        order = {
-            ticker: {
-                "buyPrice": portfolio[ticker]["buyPrice"],
-                "shares": currentShares - int(shares)
+        if (currentShares - shares) == 0:
+            portfolioCopy = portfolio
+            portfolioCopy.pop(ticker)
+        else:
+            order = {
+                ticker: {
+                    "buyPrice": portfolio[ticker]["buyPrice"],
+                    "shares": currentShares - int(shares)
+                }
             }
-        }
-        
-        portfolio.update(order)
+            
+            portfolio.update(order)
 
         with open("data/portfolio.json", "w") as f:
-            json.dump(portfolio, f)
+            json.dump(portfolioCopy, f, sort_keys=True, indent=4)
 
         buyPrice  = float(portfolio[ticker]["buyPrice"])
         sellPrice = round((float(self.p.getStockData(ticker)[ticker.upper()]["currentPrice"][1:])), 2)
@@ -95,18 +102,19 @@ class StockBot:
                 print("How many shares to buy?")
                 try:
                     shares = int(input("> "))
-                except Exception:
+                except ValueError:
                     buffer = "That is not a valid amount of shares."
+                    continue
                 
                 price = 0.0
                 print("Price to buy at?")
                 try:
                     price = float(input("> "))
-                    self.buy(ticker, shares, price)
-                except Exception:
+                except ValueError:
                     buffer = "That is not a valid price."
+                    continue
 
-                buffer = "Bought " + str(shares) + " shares of " + ticker + " for $" + str(price) + "."
+                buffer = self.buy(ticker, shares, price)
 
             elif command == "3":
                 print("What is the ticker?")

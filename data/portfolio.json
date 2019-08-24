@@ -1,1 +1,7 @@
-{"asd": {"buyPrice": "123.0", "shares": 2}, "msft": {"buyPrice": "23.0", "shares": 850}}
+{
+    "aapl": {
+        "buyPrice": "73.0",
+        "shares": 120
+    }
+
+}
